@@ -16,26 +16,45 @@ steps:
   # Upload dataflow src file to bucket
   # Replace the {your-bucket-name} from non-prod in the bucket name
   - name: 'gcr.io/cloud-builders/gsutil'
-    args: ['cp', '-r', './src', 'gs://{NON_PROD_BUCKET_NAME}']
+    args: ['cp', '-r', './src', 'gs://bkt-n-ml-storage-gwzuy21e']
 
   - name: 'gcr.io/cloud-builders/gsutil'
-  # Replace the {your-bucket-name} from non-prod in the bucket name
-    args: ['cp', '-r', './data', 'gs://{NON_PROD_BUCKET_NAME}']
+    # Replace the {your-bucket-name} from non-prod in the bucket name
+    args: ['cp', '-r', './data', 'gs://bkt-n-ml-storage-gwzuy21e']
 
   # compile pipeline
   # Replace the {your-artifact-project} for your artifact project ID
-  - name: 'us-central1-docker.pkg.dev/{COMMOM_ARTIFACTS_PRJ_ID}/c-publish-artifacts/vertexpipeline:v2'
+  - name: 'us-central1-docker.pkg.dev/prj-c-mlartifacts-ydjv/c-publish-artifacts/vertexpipeline:v2'
     entrypoint: 'python'
     args: ['compile_pipeline.py']
     id: 'compile_job'
+    waitFor: ['-']
+
+  # Add a delay of 120 seconds (2 minutes) before continuing
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "Sleeping for 120 seconds..."
+        sleep 120
 
   # run pipeline
   # Replace the {your-artifact-project} for your artifact project ID
-  - name: 'us-central1-docker.pkg.dev/{COMMOM_ARTIFACTS_PRJ_ID}/c-publish-artifacts/vertexpipeline:v2'
+  - name: 'us-central1-docker.pkg.dev/prj-c-mlartifacts-ydjv/c-publish-artifacts/vertexpipeline:v2'
     entrypoint: 'python'
     args: ['runpipeline.py']
     id: 'run_job'
     waitFor: ['compile_job']
+
+  # Add a delay of 120 seconds (2 minutes) before continuing
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "Sleeping for 120 seconds..."
+        sleep 120
 
   #   # upload pipeline yaml to composer
   # - name: 'gcr.io/cloud-builders/gsutil'
