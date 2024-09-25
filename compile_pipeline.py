@@ -21,18 +21,18 @@ from kfp.dsl import Input, Output, Model, Metrics, OutputPath
 from typing import NamedTuple
 
 # Replace with your non-prod project ID
-PROJECT_ID = "{PRJ_N_MACHINE_LEARNING_ID}"
+PROJECT_ID = "prj-n-mlmachine-learning-cwps"
 # Replace with your region only if different
 REGION = "us-central1"
 # Replace with your bucket's uri
-BUCKET_URI = "gs://{NON_PROD_BUCKET_NAME}"
+BUCKET_URI = "gs://bkt-n-ml-storage-ds31fbez"
 
 KFP_COMPONENTS_PATH = "components"
 SRC = "src"
 BUILD = "build"
 # Replace {artifact-project} and {artifact-repository}
 # with your artifact project and repository
-Image = f"us-central1-docker.pkg.dev/{COMMOM_ARTIFACTS_PRJ_ID}/c-publish-artifacts/vertexpipeline:v2"
+Image = f"us-central1-docker.pkg.dev/prj-c-mlartifacts-g0d6/c-publish-artifacts/vertexpipeline:v2"
 
 
 DATA_URL = f'{BUCKET_URI}/data'
